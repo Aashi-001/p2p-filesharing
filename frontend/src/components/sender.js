@@ -6,7 +6,7 @@ export default function Sender({ roomId }) {
   const [status, setStatus] = useState("Idle");
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:8080');
+    const socket = new WebSocket('wss://p2p-filesharing-production.up.railway.app'); //new WebSocket('ws://localhost:8080');
 
     socket.onopen = () => {
       socket.send(JSON.stringify({ type: "join", role: "sender", roomId }));

@@ -9,7 +9,7 @@ const Receiver = ({ roomId }) => {
   const [status, setStatus] = useState('Connecting...');
 
   useEffect(() => {
-    ws.current = new WebSocket('ws://localhost:8080');
+    ws.current = new WebSocket('wss://p2p-filesharing-production.up.railway.app'); //new WebSocket('ws://localhost:8080');
 
     ws.current.onopen = () => {
       ws.current.send(JSON.stringify({ type: 'join', role: 'receiver', roomId }));
