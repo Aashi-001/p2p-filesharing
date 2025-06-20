@@ -99,7 +99,7 @@ export default function Receiver({ roomId }) {
   const [status, setStatus] = useState('Waiting for signaling...');
 
   useEffect(() => {
-    ws.current = new WebSocket('wss://YOUR_SIGNALING_SERVER_URL');
+    ws.current = new WebSocket('wss://p2p-filesharing-production.up.railway.app');
 
     ws.current.onopen = () => {
       ws.current.send(JSON.stringify({ type: 'join', role: 'receiver', roomId }));
