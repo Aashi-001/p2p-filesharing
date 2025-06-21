@@ -95,11 +95,14 @@ export default function Receiver({ roomId }) {
   const ws = useRef(null);
   const chunks = useRef([]);
   const fileMetadata = useRef(null);
+  const bytesReceived = useRef(0);
+  const [progress, setProgress] = useState(0);
 
   const [status, setStatus] = useState('Waiting for signaling...');
 
   useEffect(() => {
-    ws.current = new WebSocket('wss://p2p-filesharing-production.up.railway.app');
+    // ws.current = new WebSocket('wss://p2p-filesharing-production.up.railway.app');
+    ws.current = new WebSocket('ws://localhost:8080');
 
     ws.current.onopen = () => {
       ws.current.send(JSON.stringify({ type: 'join', role: 'receiver', roomId }));
@@ -140,36 +143,45 @@ export default function Receiver({ roomId }) {
       }
     };
 
-    pcRef.current.ontrack = (event) => {
-      setStatus('Receiving screen stream...');
-      const video = document.createElement('video');
-      video.controls = true;
-      video.srcObject = new MediaStream([event.track]);
-      document.body.appendChild(video);
-      video.play();
-    };
+    // pcRef.current.ontrack = (event) => {
+    //   setStatus('Receiving screen stream...');
+    //   const video = document.createElement('video');
+    //   video.controls = true;
+    //   video.srcObject = new MediaStream([event.track]);
+    //   document.body.appendChild(video);
+    //   video.play();
+    // };
 
     pcRef.current.ondatachannel = (event) => {
       const channel = event.channel;
-      setStatus('Data channel open for file reception');
+      setStatus('Receiving file...');
 
       channel.onmessage = (e) => {
         if (typeof e.data === 'string') {
           try {
             fileMetadata.current = JSON.parse(e.data);
             chunks.current = [];
+            bytesReceived.current = 0; // ✅ reset byte count
+            setProgress(0);
           } catch {
             console.error('Invalid file metadata');
           }
         } else {
           chunks.current.push(e.data);
+          bytesReceived.current += e.data.byteLength; // ✅ increment total received
+
+          const total = fileMetadata.current?.size || 1;
+          const percentage = Math.min((bytesReceived.current / total) * 100, 100);
+          setProgress(percentage); // ✅ update visual progress
+
           if (chunks.current.length === fileMetadata.current.totalChunks) {
             const blob = new Blob(chunks.current);
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = fileMetadata.current.fileName;
             a.click();
-            setStatus('File download complete');
+            setStatus('File download complete ✅');
+            setProgress(100); // ✅ ensure it's full
             chunks.current = [];
           }
         }
@@ -194,6 +206,23 @@ export default function Receiver({ roomId }) {
     <div style={{ textAlign: 'center' }}>
       <h2>Receiver</h2>
       <p>{status}</p>
+      {progress > 0 && progress < 100 && (
+        <div style={{ width: '50%', margin: '1rem auto', background: '#eee', borderRadius: '8px' }}>
+          <div
+            style={{
+              width: `${progress}%`,
+              height: '20px',
+              background: '#2196f3',
+              borderRadius: '8px',
+              transition: 'width 0.2s ease-in-out',
+            }}
+          />
+        </div>
+      )}
+
+      {progress > 0 && progress < 100 && (
+        <p>{Math.round(progress)}%</p>
+      )}
     </div>
   );
 }

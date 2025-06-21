@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+// import { Dropbox } from 'dropbox';
+import DropboxUploader from "./dropbox";
 
 export default function Sender({ roomId }) {
   const [senderSocket, setSenderSocket] = useState(null);
   const [dataChannel, setDataChannel] = useState(null);
   const [status, setStatus] = useState("Idle");
+  const [progressBar, setprogressBar] = useState(0);
+  const [fileSelected, setFileSelected] = useState(false);
 
   useEffect(() => {
-    const socket = new WebSocket('wss://p2p-filesharing-production.up.railway.app'); //new WebSocket('ws://localhost:8080');
+    const socket = new WebSocket("ws://localhost:8080");
+    // new WebSocket('wss://p2p-filesharing-production.up.railway.app');
 
     socket.onopen = () => {
       socket.send(JSON.stringify({ type: "join", role: "sender", roomId }));
@@ -26,20 +31,24 @@ export default function Sender({ roomId }) {
     pc.onnegotiationneeded = async () => {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      senderSocket.send(JSON.stringify({
-        type: 'createOffer',
-        sdp: pc.localDescription,
-        roomId
-      }));
+      senderSocket.send(
+        JSON.stringify({
+          type: "createOffer",
+          sdp: pc.localDescription,
+          roomId,
+        })
+      );
     };
 
     pc.onicecandidate = (e) => {
       if (e.candidate) {
-        senderSocket.send(JSON.stringify({
-          type: 'iceCandidate',
-          candidate: e.candidate,
-          roomId
-        }));
+        senderSocket.send(
+          JSON.stringify({
+            type: "iceCandidate",
+            candidate: e.candidate,
+            roomId,
+          })
+        );
       }
     };
 
@@ -57,17 +66,46 @@ export default function Sender({ roomId }) {
       const chunkSize = 64 * 1024;
       const totalChunks = Math.ceil(file.size / chunkSize);
 
-      dc.send(JSON.stringify({ fileName: file.name, size: file.size, totalChunks }));
+      dc.send(
+        JSON.stringify({ fileName: file.name, size: file.size, totalChunks })
+      );
 
       let offset = 0;
       const reader = new FileReader();
 
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         if (dc.readyState !== "open") return;
-        dc.send(event.target.result);
-        offset += event.target.result.byteLength;
-        if (offset < file.size) readSlice(offset);
-        else setStatus("File transfer complete ✅");
+
+        const buffer = event.target.result;
+
+        const waitForBuffer = () => {
+          return new Promise((resolve) => {
+            const check = () => {
+              if (dc.bufferedAmount < 8 * 1024 * 1024) {
+                resolve();
+              } else {
+                setTimeout(check, 50); // check every 50ms
+              }
+            };
+            check();
+          });
+        };
+
+        await waitForBuffer();
+
+        dc.send(buffer);
+        offset += buffer.byteLength;
+
+        const percent = Math.min((offset / file.size) * 100, 100);
+        setprogressBar(percent);
+        console.log(percent);
+
+        if (offset < file.size) {
+          readSlice(offset);
+        } else {
+          setStatus("File transfer complete ✅");
+          setprogressBar(100);
+        }
       };
 
       const readSlice = (o) => {
@@ -80,16 +118,60 @@ export default function Sender({ roomId }) {
   }
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    // <div style={{ textAlign: 'center' }}>
+    //   <h2>WebRTC File Sender</h2>
+    //   <p>{status}</p>
+    //   {/* <input
+    //     type="file"
+    //     onChange={(e) => {
+    //       const file = e.target.files[0];
+    //       if (file) startFileTransfer(file);
+    //     }}
+    //   /> */}
+    //   <DropboxUploader onFileSelected={startFileTransfer} />
+    //   {/* <DropboxUploader /> */}
+    //   {progressBar > 0 && (
+    //     <div style={{ width: '50%', margin: '0 auto', background: '#eee', borderRadius: '8px' }}>
+    //         <div
+    //         style={{
+    //             width: `${progressBar}%`,
+    //             height: '20px',
+    //             background: '#4caf50',
+    //             borderRadius: '8px',
+    //             transition: 'width 0.2s ease-in-out',
+    //         }}
+    //         />
+    //     </div>
+    //     )}
+    // </div>
+    <div style={{ textAlign: "center" }}>
       <h2>WebRTC File Sender</h2>
       <p>{status}</p>
-      <input
-        type="file"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          if (file) startFileTransfer(file);
-        }}
-      />
+
+      {/* File selection component */}
+      {/* <DropboxUploader onFileSelected={startFileTransfer} /> */}
+      {!fileSelected && (
+        <DropboxUploader
+          onFileSelected={(file) => {
+            setFileSelected(true);
+            startFileTransfer(file);
+          }}
+        />
+      )}
+
+      {progressBar > 0 && progressBar < 100 && (
+      <div style={{ width: '50%', margin: '1rem auto', background: '#eee', borderRadius: '8px' }}>
+        <div
+          style={{
+            width: `${progressBar}%`,
+            height: '20px',
+            background: '#4caf50',
+            borderRadius: '8px',
+            transition: 'width 0.2s ease-in-out',
+          }}
+        />
+      </div>
+    )}
     </div>
   );
 }
