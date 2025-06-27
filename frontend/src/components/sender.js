@@ -29,7 +29,10 @@ export default function Sender({ roomId }) {
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         {
-          urls: 'turn:59.89.25.128:3478',
+          urls: [
+            "turn:192.168.1.7:3478?transport=udp",
+            "turn:192.168.1.7:3478?transport=tcp"
+          ],
           username: 'webrtc',
           credential: 'pass123'
         }
