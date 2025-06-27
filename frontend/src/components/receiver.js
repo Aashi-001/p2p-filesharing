@@ -46,16 +46,26 @@ export default function Receiver({ roomId }) {
     //     }
     //   ]
     // });
-    pcRef.current = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        {
-          urls: 'turn:59.89.25.128:3478',
-          username: 'webrtc',
-          credential: 'pass123'
-        }
-      ]
-    });
+    // pcRef.current = new RTCPeerConnection({
+    //   iceServers: [
+    //     { urls: 'stun:stun.l.google.com:19302' },
+    //     {
+    //       urls: 'turn:59.89.25.128:3478',
+    //       username: 'webrtc',
+    //       credential: 'pass123'
+    //     }
+    //   ]
+    // });
+    const iceServers = [
+      { urls: 'stun:stun.l.google.com:19302' }, // free STUN
+      {
+        urls: 'turn:openrelay.metered.ca:80',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+      }
+    ];
+
+    pcRef.current = new RTCPeerConnection({ iceServers });
 
     pcRef.current.onicecandidate = (e) => {
       if (e.candidate) {

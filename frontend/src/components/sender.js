@@ -25,16 +25,26 @@ export default function Sender({ roomId }) {
     if (!senderSocket || !file) return;
 
     // const pc = new RTCPeerConnection();
-    const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        {
-          urls: 'turn:59.89.25.128:3478',
-          username: 'webrtc',
-          credential: 'pass123'
-        }
-      ]
-    });
+    // const pc = new RTCPeerConnection({
+    //   iceServers: [
+    //     { urls: 'stun:stun.l.google.com:19302' },
+    //     {
+    //       urls: 'turn:59.89.25.128:3478',
+    //       username: 'webrtc',
+    //       credential: 'pass123'
+    //     }
+    //   ]
+    // });
+    const iceServers = [
+      { urls: 'stun:stun.l.google.com:19302' }, // free STUN
+      {
+        urls: 'turn:openrelay.metered.ca:80',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+      }
+    ];
+
+    const pc = new RTCPeerConnection({ iceServers });
 
     const dc = pc.createDataChannel("fileChannel");
     setDataChannel(dc);
