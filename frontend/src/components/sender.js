@@ -25,16 +25,16 @@ export default function Sender({ roomId }) {
     if (!senderSocket || !file) return;
 
     // const pc = new RTCPeerConnection();
-    // const pc = new RTCPeerConnection({
-    //   iceServers: [
-    //     { urls: 'stun:stun.l.google.com:19302' },
-    //     {
-    //       urls: 'turn:59.89.25.128:3478',
-    //       username: 'webrtc',
-    //       credential: 'pass123'
-    //     }
-    //   ]
-    // });
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        {
+          urls: 'turn:59.89.25.128:3478',
+          username: 'webrtc',
+          credential: 'pass123'
+        }
+      ]
+    });
     // const iceServers = [
     //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
     //   {
@@ -45,24 +45,24 @@ export default function Sender({ roomId }) {
     // ];
 
     // const pc = new RTCPeerConnection({ iceServers });
-    const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        {
-          urls: 'turn:openrelay.metered.ca:80?transport=udp',
-          username: 'openrelayproject',
-          credential: 'openrelayproject'
-        },
-        {
-          urls: 'turn:openrelay.metered.ca:80?transport=tcp',
-          username: 'openrelayproject',
-          credential: 'openrelayproject'
-        }
-      ],
-      iceTransportPolicy: "all",
-      bundlePolicy: "balanced",
-      rtcpMuxPolicy: "require"
-    });
+    // const pc = new RTCPeerConnection({
+    //   iceServers: [
+    //     { urls: 'stun:stun.l.google.com:19302' },
+    //     {
+    //       urls: 'turn:openrelay.metered.ca:80?transport=udp',
+    //       username: 'openrelayproject',
+    //       credential: 'openrelayproject'
+    //     },
+    //     {
+    //       urls: 'turn:openrelay.metered.ca:80?transport=tcp',
+    //       username: 'openrelayproject',
+    //       credential: 'openrelayproject'
+    //     }
+    //   ],
+    //   iceTransportPolicy: "all",
+    //   bundlePolicy: "balanced",
+    //   rtcpMuxPolicy: "require"
+    // });
 
     const dc = pc.createDataChannel("fileChannel");
     setDataChannel(dc);

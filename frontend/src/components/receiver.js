@@ -46,16 +46,16 @@ export default function Receiver({ roomId }) {
     //     }
     //   ]
     // });
-    // pcRef.current = new RTCPeerConnection({
-    //   iceServers: [
-    //     { urls: 'stun:stun.l.google.com:19302' },
-    //     {
-    //       urls: 'turn:59.89.25.128:3478',
-    //       username: 'webrtc',
-    //       credential: 'pass123'
-    //     }
-    //   ]
-    // });
+    pcRef.current = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        {
+          urls: 'turn:59.89.25.128:3478',
+          username: 'webrtc',
+          credential: 'pass123'
+        }
+      ]
+    });
     // const iceServers = [
     //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
     //   {
@@ -65,24 +65,24 @@ export default function Receiver({ roomId }) {
     //   }
     // ];
 
-    pcRef.current = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        {
-          urls: 'turn:openrelay.metered.ca:80?transport=udp',
-          username: 'openrelayproject',
-          credential: 'openrelayproject'
-        },
-        {
-          urls: 'turn:openrelay.metered.ca:80?transport=tcp',
-          username: 'openrelayproject',
-          credential: 'openrelayproject'
-        }
-      ],
-      iceTransportPolicy: "all",
-      bundlePolicy: "balanced",
-      rtcpMuxPolicy: "require"
-    });
+    // pcRef.current = new RTCPeerConnection({
+    //   iceServers: [
+    //     { urls: 'stun:stun.l.google.com:19302' },
+    //     {
+    //       urls: 'turn:openrelay.metered.ca:80?transport=udp',
+    //       username: 'openrelayproject',
+    //       credential: 'openrelayproject'
+    //     },
+    //     {
+    //       urls: 'turn:openrelay.metered.ca:80?transport=tcp',
+    //       username: 'openrelayproject',
+    //       credential: 'openrelayproject'
+    //     }
+    //   ],
+    //   iceTransportPolicy: "all",
+    //   bundlePolicy: "balanced",
+    //   rtcpMuxPolicy: "require"
+    // });
 
     pcRef.current.onicecandidate = (e) => {
       if (e.candidate) {
