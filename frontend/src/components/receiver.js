@@ -46,20 +46,20 @@ export default function Receiver({ roomId }) {
     //     }
     //   ]
     // });
-    pcRef.current = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        {
-          // urls: 'turn:59.89.25.128:3478',
-          urls: [
-            "turn:192.168.1.7:3478?transport=udp",
-            "turn:192.168.1.7:3478?transport=tcp"
-          ],
-          username: 'webrtc',
-          credential: 'pass123'
-        }
-      ]
-    });
+    // pcRef.current = new RTCPeerConnection({
+    //   iceServers: [
+    //     { urls: 'stun:stun.l.google.com:19302' },
+    //     {
+    //       // urls: 'turn:59.89.25.128:3478',
+    //       urls: [
+    //         "turn:192.168.1.7:3478?transport=udp",
+    //         "turn:192.168.1.7:3478?transport=tcp"
+    //       ],
+    //       username: 'webrtc',
+    //       credential: 'pass123'
+    //     }
+    //   ]
+    // });
     // const iceServers = [
     //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
     //   {
@@ -68,6 +68,19 @@ export default function Receiver({ roomId }) {
     //     credential: 'openrelayproject'
     //   }
     // ];
+
+    const iceServers = [
+      { urls: 'stun:stun.l.google.com:19302' },
+      {
+        urls: [
+          "turn:13.201.117.97:3478?transport=udp",
+          "turn:13.201.117.97:3478?transport=tcp"
+        ],
+        username: 'webrtc',
+        credential: 'pass123'
+      }
+    ];
+    pcRef.current = new RTCPeerConnection({ iceServers })
 
     // pcRef.current = new RTCPeerConnection({
     //   iceServers: [

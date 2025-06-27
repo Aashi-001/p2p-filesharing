@@ -25,19 +25,30 @@ export default function Sender({ roomId }) {
     if (!senderSocket || !file) return;
 
     // const pc = new RTCPeerConnection();
-    const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        {
-          urls: [
-            "turn:192.168.1.7:3478?transport=udp",
-            "turn:192.168.1.7:3478?transport=tcp"
-          ],
-          username: 'webrtc',
-          credential: 'pass123'
-        }
-      ]
-    });
+    // const pc = new RTCPeerConnection({
+      // iceServers: [
+      //   { urls: 'stun:stun.l.google.com:19302' },
+      //   {
+      //     urls: [
+      //       "turn:192.168.1.7:3478?transport=udp",
+      //       "turn:192.168.1.7:3478?transport=tcp"
+      //     ],
+      //     username: 'webrtc',
+      //     credential: 'pass123'
+      //   }
+      // ]
+      const iceServers = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  {
+    urls: [
+      "turn:13.201.117.97:3478?transport=udp",
+      "turn:13.201.117.97:3478?transport=tcp"
+    ],
+    username: 'webrtc',
+    credential: 'pass123'
+  }
+];
+    // });
     // const iceServers = [
     //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
     //   {
@@ -47,7 +58,7 @@ export default function Sender({ roomId }) {
     //   }
     // ];
 
-    // const pc = new RTCPeerConnection({ iceServers });
+    const pc = new RTCPeerConnection({ iceServers });
     // const pc = new RTCPeerConnection({
     //   iceServers: [
     //     { urls: 'stun:stun.l.google.com:19302' },
