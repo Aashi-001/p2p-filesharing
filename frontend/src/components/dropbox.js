@@ -11,7 +11,7 @@ const DropBoxUploader = ({ onFileSelected }) => {
   };
 
   const handleDragOver = (e) => {
-    e.preventDefault(); // Necessary to allow drop
+    e.preventDefault();
   };
 
   const handleFileChange = (e) => {

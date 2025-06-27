@@ -10,8 +10,8 @@ export default function Sender({ roomId }) {
   const [fileSelected, setFileSelected] = useState(false);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
-    // new WebSocket('wss://p2p-filesharing-production.up.railway.app');
+    // const socket = new WebSocket("ws://localhost:8080");
+    const socket = new WebSocket('wss://p2p-filesharing-production.up.railway.app');
 
     socket.onopen = () => {
       socket.send(JSON.stringify({ type: "join", role: "sender", roomId }));
@@ -24,7 +24,18 @@ export default function Sender({ roomId }) {
   async function startFileTransfer(file) {
     if (!senderSocket || !file) return;
 
-    const pc = new RTCPeerConnection();
+    // const pc = new RTCPeerConnection();
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        {
+          urls: 'turn:59.89.25.128:3478',
+          username: 'webrtc',
+          credential: 'pass123'
+        }
+      ]
+    });
+
     const dc = pc.createDataChannel("fileChannel");
     setDataChannel(dc);
 
@@ -118,38 +129,10 @@ export default function Sender({ roomId }) {
   }
 
   return (
-    // <div style={{ textAlign: 'center' }}>
-    //   <h2>WebRTC File Sender</h2>
-    //   <p>{status}</p>
-    //   {/* <input
-    //     type="file"
-    //     onChange={(e) => {
-    //       const file = e.target.files[0];
-    //       if (file) startFileTransfer(file);
-    //     }}
-    //   /> */}
-    //   <DropboxUploader onFileSelected={startFileTransfer} />
-    //   {/* <DropboxUploader /> */}
-    //   {progressBar > 0 && (
-    //     <div style={{ width: '50%', margin: '0 auto', background: '#eee', borderRadius: '8px' }}>
-    //         <div
-    //         style={{
-    //             width: `${progressBar}%`,
-    //             height: '20px',
-    //             background: '#4caf50',
-    //             borderRadius: '8px',
-    //             transition: 'width 0.2s ease-in-out',
-    //         }}
-    //         />
-    //     </div>
-    //     )}
-    // </div>
     <div style={{ textAlign: "center" }}>
       <h2>WebRTC File Sender</h2>
       <p>{status}</p>
 
-      {/* File selection component */}
-      {/* <DropboxUploader onFileSelected={startFileTransfer} /> */}
       {!fileSelected && (
         <DropboxUploader
           onFileSelected={(file) => {
