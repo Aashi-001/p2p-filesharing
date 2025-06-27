@@ -56,16 +56,33 @@ export default function Receiver({ roomId }) {
     //     }
     //   ]
     // });
-    const iceServers = [
-      { urls: 'stun:stun.l.google.com:19302' }, // free STUN
-      {
-        urls: 'turn:openrelay.metered.ca:80',
-        username: 'openrelayproject',
-        credential: 'openrelayproject'
-      }
-    ];
+    // const iceServers = [
+    //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
+    //   {
+    //     urls: 'turn:openrelay.metered.ca:80',
+    //     username: 'openrelayproject',
+    //     credential: 'openrelayproject'
+    //   }
+    // ];
 
-    pcRef.current = new RTCPeerConnection({ iceServers });
+    pcRef.current = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        {
+          urls: 'turn:openrelay.metered.ca:80?transport=udp',
+          username: 'openrelayproject',
+          credential: 'openrelayproject'
+        },
+        {
+          urls: 'turn:openrelay.metered.ca:80?transport=tcp',
+          username: 'openrelayproject',
+          credential: 'openrelayproject'
+        }
+      ],
+      iceTransportPolicy: "all",
+      bundlePolicy: "balanced",
+      rtcpMuxPolicy: "require"
+    });
 
     pcRef.current.onicecandidate = (e) => {
       if (e.candidate) {

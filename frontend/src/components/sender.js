@@ -35,16 +35,34 @@ export default function Sender({ roomId }) {
     //     }
     //   ]
     // });
-    const iceServers = [
-      { urls: 'stun:stun.l.google.com:19302' }, // free STUN
-      {
-        urls: 'turn:openrelay.metered.ca:80',
-        username: 'openrelayproject',
-        credential: 'openrelayproject'
-      }
-    ];
+    // const iceServers = [
+    //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
+    //   {
+    //     urls: 'turn:openrelay.metered.ca:80',
+    //     username: 'openrelayproject',
+    //     credential: 'openrelayproject'
+    //   }
+    // ];
 
-    const pc = new RTCPeerConnection({ iceServers });
+    // const pc = new RTCPeerConnection({ iceServers });
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        {
+          urls: 'turn:openrelay.metered.ca:80?transport=udp',
+          username: 'openrelayproject',
+          credential: 'openrelayproject'
+        },
+        {
+          urls: 'turn:openrelay.metered.ca:80?transport=tcp',
+          username: 'openrelayproject',
+          credential: 'openrelayproject'
+        }
+      ],
+      iceTransportPolicy: "all",
+      bundlePolicy: "balanced",
+      rtcpMuxPolicy: "require"
+    });
 
     const dc = pc.createDataChannel("fileChannel");
     setDataChannel(dc);
