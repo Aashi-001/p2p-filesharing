@@ -172,8 +172,8 @@ export default function Sender({ roomId }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h2>WebRTC File Sender</h2>
-      <p>{status}</p>
+      {/* <h2>WebRTC File Sender</h2> */}
+      <p className="status-text">{status}</p>
 
       {!fileSelected && (
         <DropboxUploader

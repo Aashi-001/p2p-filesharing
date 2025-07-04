@@ -20,28 +20,65 @@ const DropBoxUploader = ({ onFileSelected }) => {
   };
 
   return (
+    // <div
+    //   onDrop={handleDrop}
+    //   onDragOver={handleDragOver}
+    //   onClick={() => inputRef.current.click()}
+    //   style={{
+    //     // border: '2px dashed #000000',
+    //     // padding: '2rem',
+    //     // textAlign: 'center',
+    //     // cursor: 'pointer',
+    //     // borderRadius: '8px',
+    //     // height: '100px', width: '50%',
+    //     // margin: '0 auto',
+    //     border: '2px dashed #000000',
+    //     width: '600px',
+    //     height: '200px',
+    //     padding: '2rem',
+    //     textAlign: 'center',
+    //     cursor: 'pointer',
+    //     borderRadius: '8px',
+    //     margin: '20px auto',
+    //     display: 'flex',
+    //     alignItems: 'center',
+    //     justifyContent: 'center'
+    //   }}
+    // >
+    //   <p>Click or Drag & Drop a file here</p>
+    //   <input
+    //     type="file"
+    //     onChange={handleFileChange}
+    //     ref={inputRef}
+    //     style={{ display: 'none'}} //, height: '180px', width: '800px',}}
+    //   />
+    // </div>
     <div
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onClick={() => inputRef.current.click()}
       style={{
-        border: '2px dashed #aaa',
-        padding: '2rem',
+        border: '2px dashed #000000',
+        // width: '600px',
+        height: '200px',
         textAlign: 'center',
         cursor: 'pointer',
-        borderRadius: '8px',
-        height: '100px', width: '50%',
+        borderRadius: '12px',
         margin: '0 auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
-      <p>Click or Drag & Drop a file here</p>
-      <input
-        type="file"
-        onChange={handleFileChange}
-        ref={inputRef}
-        style={{ display: 'none'}}
-      />
-    </div>
+  <p>Click or Drag & Drop a file here</p>
+  <input
+    type="file"
+    onChange={handleFileChange}
+    ref={inputRef}
+    style={{ display: 'none', width: '80%' }}
+  />
+</div>
+
   );
 };
 

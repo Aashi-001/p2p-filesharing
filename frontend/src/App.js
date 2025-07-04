@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sender from './components/sender'
 import Receiver from './components/receiver';
+import './App.css';
 
 function App() {
   const [role, setRole] = useState(null);
@@ -21,18 +22,19 @@ function App() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '40px' }}>
-      <h1>WebRTC P2P File Transfer</h1>
+    // <div style={{ textAlign: 'center', marginTop: '40px' }}>
+    <div className="container">
+      <h1>Welcome to FilehopP2P</h1>
 
       {!role && (
         <div>
-          <button onClick={() => {
+          <button className="send-btn" onClick={() => {
             const generated = generateRoomCode();
             setRole('sender');
             setRoomId(generated);
           }}>Send File</button>
 
-          <button onClick={() => setRole('receiver')} style={{ marginLeft: '20px' }}>
+          <button className="receive-btn" onClick={() => setRole('receiver')} style={{ marginLeft: '20px' }}>
             Receive File
           </button>
         </div>
@@ -59,7 +61,7 @@ function App() {
             setRoomId('');
             setSubmitted(false);
           }}>
-            🔙 Back
+            🔙
           </button>
         </div>
       )}
