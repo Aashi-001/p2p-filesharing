@@ -11,7 +11,9 @@ export default function Sender({ roomId }) {
 
   useEffect(() => {
     // const socket = new WebSocket("ws://localhost:8080");
-    const socket = new WebSocket('wss://p2p-filesharing-production.up.railway.app');
+    const socket = new WebSocket(
+      "wss://p2p-filesharing-production.up.railway.app"
+    );
 
     socket.onopen = () => {
       socket.send(JSON.stringify({ type: "join", role: "sender", roomId }));
@@ -26,28 +28,28 @@ export default function Sender({ roomId }) {
 
     // const pc = new RTCPeerConnection();
     // const pc = new RTCPeerConnection({
-      // iceServers: [
-      //   { urls: 'stun:stun.l.google.com:19302' },
-      //   {
-      //     urls: [
-      //       "turn:192.168.1.7:3478?transport=udp",
-      //       "turn:192.168.1.7:3478?transport=tcp"
-      //     ],
-      //     username: 'webrtc',
-      //     credential: 'pass123'
-      //   }
-      // ]
-      const iceServers = [
-  { urls: 'stun:stun.l.google.com:19302' },
-  {
-    urls: [
-      "turn:13.201.117.97:3478?transport=udp",
-      "turn:13.201.117.97:3478?transport=tcp"
-    ],
-    username: 'webrtc',
-    credential: 'pass123'
-  }
-];
+    // iceServers: [
+    //   { urls: 'stun:stun.l.google.com:19302' },
+    //   {
+    //     urls: [
+    //       "turn:192.168.1.7:3478?transport=udp",
+    //       "turn:192.168.1.7:3478?transport=tcp"
+    //     ],
+    //     username: 'webrtc',
+    //     credential: 'pass123'
+    //   }
+    // ]
+    const iceServers = [
+      { urls: "stun:stun.l.google.com:19302" },
+      {
+        urls: [
+          "turn:13.201.117.97:3478?transport=udp",
+          "turn:13.201.117.97:3478?transport=tcp",
+        ],
+        username: "webrtc",
+        credential: "pass123",
+      },
+    ];
     // });
     // const iceServers = [
     //   { urls: 'stun:stun.l.google.com:19302' }, // free STUN
@@ -185,18 +187,25 @@ export default function Sender({ roomId }) {
       )}
 
       {progressBar > 0 && progressBar < 100 && (
-      <div style={{ width: '50%', margin: '1rem auto', background: '#eee', borderRadius: '8px' }}>
         <div
           style={{
-            width: `${progressBar}%`,
-            height: '20px',
-            background: '#4caf50',
-            borderRadius: '8px',
-            transition: 'width 0.2s ease-in-out',
+            width: "50%",
+            margin: "1rem auto",
+            background: "#eee",
+            borderRadius: "8px",
           }}
-        />
-      </div>
-    )}
+        >
+          <div
+            style={{
+              width: `${progressBar}%`,
+              height: "20px",
+              background: "#4caf50",
+              borderRadius: "8px",
+              transition: "width 0.2s ease-in-out",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
